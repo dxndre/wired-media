@@ -58,8 +58,6 @@ function wpqc_create_table() {
 function wpqc_quickcheck_shortcode() {
     ob_start();
     ?>
-    <div id="entries-container"></div>
-    <button id="load-entries">Load Entries</button>
 
     <form class="quickcheck-form">
         <div class="form-inner">
@@ -73,6 +71,11 @@ function wpqc_quickcheck_shortcode() {
             </div>
         </div>
     </form>
+
+    <div class="results">
+        <h3>Your last 5 entries</h3>
+        <div id="entries-container"></div>
+    </div>
     <?php
     return ob_get_clean();
 }
@@ -120,12 +123,18 @@ function wpqc_get_entries_ajax() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'qc_entries';
 
+    // Get last 5 entries only
     $results = $wpdb->get_results(
-        "SELECT id, content, created_at FROM $table_name ORDER BY created_at DESC",
+        "SELECT id, content, created_at 
+         FROM $table_name 
+         ORDER BY created_at DESC 
+         LIMIT 5",
         ARRAY_A
     );
 
     wp_send_json($results);
+    wp_die();
 }
+
 add_action('wp_ajax_wpqc_get_entries', 'wpqc_get_entries_ajax');
 add_action('wp_ajax_nopriv_wpqc_get_entries', 'wpqc_get_entries_ajax');

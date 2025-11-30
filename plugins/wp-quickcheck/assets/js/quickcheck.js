@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 
     const input = $('#wpqc_text');
     const countNumber = $('.count-number');
-    const submitBtn = $('#qc-submit'); // match the ID from shortcode
+    const submitBtn = $('.quickcheck-form button[type="submit"]');
 
     // Disable submit on load
     submitBtn.addClass('disabled').prop('disabled', true);
@@ -21,6 +21,14 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Helper: keep only last 5 entries
+    function trimEntries() {
+        const entries = $('#entries-container .qc-entry');
+        if (entries.length > 5) {
+            entries.last().remove();
+        }
+    }
+
     // AJAX form submission
     $('.quickcheck-form').on('submit', function(e) {
         e.preventDefault();
@@ -32,16 +40,22 @@ jQuery(document).ready(function($) {
             type: 'POST',
             dataType: 'json',
             data: {
-                action: 'qc_submit_entry', // must match PHP handler
+                action: 'qc_submit_entry', // match PHP handler
                 nonce: wpqc_ajax_obj.nonce, // match localized nonce
                 content: content
             },
             success: function(response) {
                 if (response.success) {
-                    // Append new entry to container
+                    // Prepend new entry with classes
                     $('#entries-container').prepend(
-                        `<div class="qc-entry"><strong>ID ${response.data.id}:</strong> ${response.data.content}</div>`
+                        `<div class="qc-entry qc-entry-${response.data.id}">
+                            <span class="qc-entry-id">ID ${response.data.id}:</span> 
+                            <span class="qc-entry-content">${response.data.content}</span>
+                        </div>`
                     );
+
+                    // Trim to last 5 entries
+                    trimEntries();
 
                     // Reset field + count
                     input.val('');
@@ -61,8 +75,8 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // Optional: load all existing entries
-    $('#load-entries').on('click', function() {
+    // Optional: load last 5 entries on page load
+    function loadEntries() {
         $.ajax({
             url: wpqc_ajax_obj.ajax_url,
             type: 'POST',
@@ -71,11 +85,14 @@ jQuery(document).ready(function($) {
                 action: 'wpqc_get_entries'
             },
             success: function(entries) {
-                let container = $('#entries-container');
+                const container = $('#entries-container');
                 container.empty();
                 entries.forEach(function(entry) {
                     container.append(
-                        `<div class="qc-entry"><strong>ID ${entry.id}:</strong> ${entry.content}</div>`
+                        `<div class="qc-entry qc-entry-${entry.id}">
+                            <span class="qc-entry-id">ID ${entry.id}:</span> 
+                            <span class="qc-entry-content">${entry.content}</span>
+                        </div>`
                     );
                 });
             },
@@ -84,6 +101,8 @@ jQuery(document).ready(function($) {
                 alert("Could not load entries – check console");
             }
         });
-    });
+    }
+
+    loadEntries(); // run on page load
 
 });

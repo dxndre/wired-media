@@ -9,11 +9,11 @@
   margin-top: 12px;
   border-radius: 50px;
   box-shadow: 0px 5px 50px -25px grey;
-  transform: scale(0.9875);
+  transform: scale(1);
   transition: 0.7s all ease;
 }
 .quickcheck-form .form-inner .input-section:hover {
-  transform: scale(1);
+  transform: scale(1.0125);
   box-shadow: 0px 5px 50px -25px black;
   transition: 0.3s all ease;
 }
@@ -95,4 +95,11 @@
 .quickcheck-form .form-inner .character-count-section .char-count .count-number.too-short {
   color: red;
   transition: 0.3s all ease;
+}
+
+.qc-entry {
+  padding: 16px;
+  padding-left: 0;
+  font-size: 16px;
+  border-bottom: 1px solid #dedede;
 }
