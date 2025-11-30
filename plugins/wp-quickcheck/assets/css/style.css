@@ -1,3 +1,53 @@
 .quickcheck-form {
-  background-color: green;
+  padding: 50px;
+}
+.quickcheck-form .form-inner .input-section {
+  display: flex;
+  margin-top: 12px;
+  border-radius: 50px;
+  box-shadow: 0px 5px 50px -25px grey;
+  transition: 0.7s all ease;
+}
+.quickcheck-form .form-inner .input-section:hover {
+  box-shadow: 0px 5px 50px -25px black;
+  transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .input-section input[type=text] {
+  font-size: 24px;
+  padding: 20px 28px;
+  background: transparent;
+  color: black;
+  width: 100%;
+  border: 1px solid #dedede;
+  border-right: none;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  transition: 0.7s all ease;
+}
+.quickcheck-form .form-inner .input-section input[type=text]:focus {
+  outline: none;
+  border-color: #333333;
+  transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .input-section button {
+  width: 200px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  font-size: 20px;
+  border: 1px solid transparent;
+  border-left: none;
+  background: #333333;
+  color: white;
+  transition: 0.7s all ease;
+}
+.quickcheck-form .form-inner .input-section button:hover {
+  background: black;
+  transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .input-section button:active, .quickcheck-form .form-inner .input-section button:focus, .quickcheck-form .form-inner .input-section button:focus-within, .quickcheck-form .form-inner .input-section button:focus-visible {
+  border-color: #333333;
+  background: white;
+  outline: none;
+  color: #333333;
+  transition: 0.3s all ease;
 }

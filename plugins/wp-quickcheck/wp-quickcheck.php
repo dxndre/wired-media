@@ -46,9 +46,13 @@ function wpqc_quickcheck_shortcode() {
     <form class="quickcheck-form" method="post" action="">
         <?php wp_nonce_field('wpqc_form_action', 'wpqc_nonce'); ?>
 
-        <label for="wpqc_text">Enter something:</label><br>
-        <input type="text" name="wpqc_text" id="wpqc_text" required />
-        <button type="submit" name="wpqc_submit">Submit</button>
+        <div class="form-inner">
+            <label for="wpqc_text">Enter something:</label><br>
+            <div class="input-section">
+                <input type="text" name="wpqc_text" id="wpqc_text" required />
+                <button type="submit" name="wpqc_submit">Submit</button>
+            </div>
+        </div>
     </form>
 
     <?php
