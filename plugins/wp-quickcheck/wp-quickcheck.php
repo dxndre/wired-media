@@ -28,6 +28,7 @@ function wpqc_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'wpqc_enqueue_assets' );
 
 
+// SHORTCODE FUNCTIONALITY
 
 function wpqc_quickcheck_shortcode() {
     // If the form was submitted, process it securely
@@ -74,4 +75,30 @@ function wpqc_quickcheck_shortcode() {
 
     return $output;
 }
+
 add_shortcode('qc_form', 'wpqc_quickcheck_shortcode');
+
+
+// CREATING TABLE UPON PLUGIN ACTIVATION
+
+register_activation_hook( __FILE__, 'wpqc_create_table' );
+
+function wpqc_create_table() {
+    global $wpdb;
+
+    // Table name with WordPress prefix
+    $table_name = $wpdb->prefix . 'qc_entries';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    // SQL for creating table
+    $sql = "CREATE TABLE $table_name (
+        id INT NOT NULL AUTO_INCREMENT,
+        content VARCHAR(255) NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    // Include upgrade functions and run dbDelta
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+}
