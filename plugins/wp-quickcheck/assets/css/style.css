@@ -1,22 +1,27 @@
 .quickcheck-form {
   padding: 50px;
 }
+.quickcheck-form .form-inner label {
+  display: none;
+}
 .quickcheck-form .form-inner .input-section {
   display: flex;
   margin-top: 12px;
   border-radius: 50px;
   box-shadow: 0px 5px 50px -25px grey;
+  transform: scale(0.9875);
   transition: 0.7s all ease;
 }
 .quickcheck-form .form-inner .input-section:hover {
+  transform: scale(1);
   box-shadow: 0px 5px 50px -25px black;
   transition: 0.3s all ease;
 }
 .quickcheck-form .form-inner .input-section input[type=text] {
-  font-size: 24px;
-  padding: 20px 28px;
+  font-size: 20px;
+  padding: 24px 32px;
   background: transparent;
-  color: black;
+  color: #333333;
   width: 100%;
   border: 1px solid #dedede;
   border-right: none;
@@ -24,9 +29,18 @@
   border-bottom-left-radius: 50px;
   transition: 0.7s all ease;
 }
+.quickcheck-form .form-inner .input-section input[type=text]::placeholder {
+  color: rgba(0, 0, 0, 0.375);
+  transition: 0.7s all ease;
+}
 .quickcheck-form .form-inner .input-section input[type=text]:focus {
+  color: black;
   outline: none;
   border-color: #333333;
+  transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .input-section input[type=text]:focus::placeholder {
+  color: rgba(0, 0, 0, 0.125);
   transition: 0.3s all ease;
 }
 .quickcheck-form .form-inner .input-section button {
@@ -50,4 +64,8 @@
   outline: none;
   color: #333333;
   transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .input-section button.disabled {
+  background-color: #d6d6d6;
+  color: #939393;
 }
