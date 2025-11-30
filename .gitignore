@@ -1,0 +1,2 @@
+# Ignore local editor history (e.g. VSCode Local History extension)
+.history/
