@@ -92,7 +92,7 @@
   color: inherit;
   transition: 0.3s all ease;
 }
-.quickcheck-form .form-inner .character-count-section .char-count.too-short .count-number {
+.quickcheck-form .form-inner .character-count-section .char-count .count-number.too-short {
   color: red;
   transition: 0.3s all ease;
 }

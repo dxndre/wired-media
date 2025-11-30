@@ -117,8 +117,8 @@
                     transition: 0.3s all ease;
                 }
 
-                &.too-short {
-                    .count-number {
+                .count-number {
+                    &.too-short {
                         color: red;
                         transition: 0.3s all ease;
                     }

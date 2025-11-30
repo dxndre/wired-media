@@ -8,7 +8,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Compiling SCSS > CSS for output
+// ENQUEUE STYLES & SCRIPTS
 function wpqc_enqueue_assets() {
     wp_enqueue_style(
         'wpqc-style',
@@ -20,77 +20,28 @@ function wpqc_enqueue_assets() {
     wp_enqueue_script(
         'wpqc-js',
         plugin_dir_url( __FILE__ ) . 'assets/js/quickcheck.js',
-        ['jquery'], // make sure jQuery is loaded first
+        ['jquery'],
         '1.0.0',
-        true // load in footer
+        true
     );
+
+    // LOCALIZE AJAX DATA FOR JS
+    wp_localize_script('wpqc-js', 'wpqc_ajax_obj', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('qc_nonce')
+    ]);
 }
 add_action( 'wp_enqueue_scripts', 'wpqc_enqueue_assets' );
 
 
-// SHORTCODE FUNCTIONALITY
-
-function wpqc_quickcheck_shortcode() {
-    // If the form was submitted, process it securely
-    $output = '';
-
-    if ( isset($_POST['wpqc_submit']) ) {
-
-        // Verify the nonce for security
-        if ( ! isset($_POST['wpqc_nonce']) || ! wp_verify_nonce($_POST['wpqc_nonce'], 'wpqc_form_action') ) {
-            $output .= '<p style="color:red;">Security check failed. Please try again.</p>';
-        } else {
-
-            // Sanitize user input
-            $input = sanitize_text_field( $_POST['wpqc_text'] );
-
-            // Example processing — replace with your own logic
-            $output .= '<p>You entered: <strong>' . esc_html($input) . '</strong></p>';
-        }
-    }
-
-    // Start output buffering for clean HTML
-    ob_start();
-    ?>
-
-    <form class="quickcheck-form" method="post" action="">
-        <?php wp_nonce_field('wpqc_form_action', 'wpqc_nonce'); ?>
-
-        <div class="form-inner">
-            <label for="wpqc_text">Write something:</label><br>
-            <div class="input-section">
-                <input type="text" name="wpqc_text" id="wpqc_text" placeholder="Write Something..." required />
-                <button type="submit" name="wpqc_submit">Submit</button>
-            </div>
-            <div class="character-count-section">
-                <span class="char-count">Character Count: <span class="count-number">0</span></span>
-            </div>
-        </div>
-    </form>
-
-    <?php
-
-    // Append form HTML to output
-    $output .= ob_get_clean();
-
-    return $output;
-}
-
-add_shortcode('qc_form', 'wpqc_quickcheck_shortcode');
-
-
-// CREATING TABLE UPON PLUGIN ACTIVATION
-
+// CREATE TABLE ON PLUGIN ACTIVATION
 register_activation_hook( __FILE__, 'wpqc_create_table' );
-
 function wpqc_create_table() {
     global $wpdb;
 
-    // Table name with WordPress prefix
     $table_name = $wpdb->prefix . 'qc_entries';
     $charset_collate = $wpdb->get_charset_collate();
 
-    // SQL for creating table
     $sql = "CREATE TABLE $table_name (
         id INT NOT NULL AUTO_INCREMENT,
         content VARCHAR(255) NOT NULL,
@@ -98,7 +49,83 @@ function wpqc_create_table() {
         PRIMARY KEY (id)
     ) $charset_collate;";
 
-    // Include upgrade functions and run dbDelta
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
 }
+
+
+// SHORTCODE FUNCTION
+function wpqc_quickcheck_shortcode() {
+    ob_start();
+    ?>
+    <div id="entries-container"></div>
+    <button id="load-entries">Load Entries</button>
+
+    <form class="quickcheck-form">
+        <div class="form-inner">
+            <label for="wpqc_text">Write something:</label><br>
+            <div class="input-section">
+                <input type="text" name="wpqc_text" id="wpqc_text" placeholder="Write Something..." required />
+                <button type="submit" id="qc-submit" class="disabled" disabled>Submit</button>
+            </div>
+            <div class="character-count-section">
+                <span class="char-count">Character Count: <span class="count-number too-short">0</span></span>
+            </div>
+        </div>
+    </form>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('qc_form', 'wpqc_quickcheck_shortcode');
+
+
+// AJAX HANDLER: INSERT ENTRY
+function wpqc_submit_entry() {
+    global $wpdb;
+
+    check_ajax_referer('qc_nonce', 'nonce'); // VERIFY NONCE
+
+    $content = isset($_POST['content']) ? sanitize_text_field($_POST['content']) : '';
+
+    if ( empty($content) || strlen($content) < 3 ) {
+        wp_send_json_error(['message' => 'Content must be at least 3 characters']);
+    }
+
+    $table_name = $wpdb->prefix . 'qc_entries';
+    $inserted = $wpdb->insert(
+        $table_name,
+        [
+            'content'    => $content,
+            'created_at' => current_time('mysql')
+        ],
+        ['%s', '%s']
+    );
+
+    if ($inserted) {
+        wp_send_json_success([
+            'message' => 'Saved successfully!',
+            'id'      => $wpdb->insert_id,
+            'content' => $content
+        ]);
+    }
+
+    wp_send_json_error(['message' => 'Database insert failed']);
+}
+add_action('wp_ajax_qc_submit_entry', 'wpqc_submit_entry');
+add_action('wp_ajax_nopriv_qc_submit_entry', 'wpqc_submit_entry');
+
+
+// AJAX HANDLER: GET ALL ENTRIES
+function wpqc_get_entries_ajax() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'qc_entries';
+
+    $results = $wpdb->get_results(
+        "SELECT id, content, created_at FROM $table_name ORDER BY created_at DESC",
+        ARRAY_A
+    );
+
+    wp_send_json($results);
+}
+add_action('wp_ajax_wpqc_get_entries', 'wpqc_get_entries_ajax');
+add_action('wp_ajax_nopriv_wpqc_get_entries', 'wpqc_get_entries_ajax');
