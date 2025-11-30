@@ -50,8 +50,6 @@
                         }
                     }
                 }
-
-                
             }
 
             button {
@@ -63,7 +61,7 @@
                 border-left: none;
                 background: #333333;
                 color: white;
-                transition: 0.7s all ease;
+                transition: 0.3s all ease;
 
                 &:hover {
                     background: black;
@@ -82,8 +80,40 @@
                 }
 
                 &.disabled {
+                    // pointer-events: none;
                     background-color: #d6d6d6;
                     color: #939393;
+                    // opacity: 0.5;
+                    cursor: not-allowed;
+
+                    &:active,
+                    &:focus,
+                    &:focus-within,
+                    &:focus-visible {
+                        border-color: #d6d6d66e;
+                        background: #d6d6d66e;
+                        outline: none;
+                        // color: white;
+                        transition: 0.3s all ease;
+                    }
+                }
+            }
+        }
+
+        .character-count-section {
+            font-size: 18px;
+            margin: 10px 28px;
+            
+            .char-count {
+                display: block;
+                font-size: 0.85em;
+                color: #555;
+                margin-top: 0.25em;
+                transition: 0.3s all ease;
+
+                &.too-short {
+                    color: red;
+                    transition: 0.3s all ease;
                 }
             }
         }

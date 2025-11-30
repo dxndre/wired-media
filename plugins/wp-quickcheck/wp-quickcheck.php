@@ -16,8 +16,17 @@ function wpqc_enqueue_assets() {
         [],
         '1.0.0'
     );
+
+    wp_enqueue_script(
+        'wpqc-js',
+        plugin_dir_url( __FILE__ ) . 'assets/js/quickcheck.js',
+        ['jquery'], // make sure jQuery is loaded first
+        '1.0.0',
+        true // load in footer
+    );
 }
 add_action( 'wp_enqueue_scripts', 'wpqc_enqueue_assets' );
+
 
 
 function wpqc_quickcheck_shortcode() {
@@ -51,6 +60,9 @@ function wpqc_quickcheck_shortcode() {
             <div class="input-section">
                 <input type="text" name="wpqc_text" id="wpqc_text" placeholder="Write Something..." required />
                 <button type="submit" name="wpqc_submit">Submit</button>
+            </div>
+            <div class="character-count-section">
+                <span class="char-count">0 / 50</span>
             </div>
         </div>
     </form>
