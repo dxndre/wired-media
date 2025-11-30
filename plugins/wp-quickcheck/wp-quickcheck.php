@@ -62,7 +62,7 @@ function wpqc_quickcheck_shortcode() {
                 <button type="submit" name="wpqc_submit">Submit</button>
             </div>
             <div class="character-count-section">
-                <span class="char-count">0 / 50</span>
+                <span class="char-count">Character Count: <span class="count-number">0</span></span>
             </div>
         </div>
     </form>

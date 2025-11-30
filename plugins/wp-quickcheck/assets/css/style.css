@@ -78,16 +78,21 @@
 }
 .quickcheck-form .form-inner .character-count-section {
   font-size: 18px;
-  margin: 10px 28px;
+  margin: 14px 28px;
 }
 .quickcheck-form .form-inner .character-count-section .char-count {
+  font-weight: 500;
   display: block;
   font-size: 0.85em;
-  color: #555;
+  color: #333333;
   margin-top: 0.25em;
   transition: 0.3s all ease;
 }
-.quickcheck-form .form-inner .character-count-section .char-count.too-short {
+.quickcheck-form .form-inner .character-count-section .char-count .count-number {
+  color: inherit;
+  transition: 0.3s all ease;
+}
+.quickcheck-form .form-inner .character-count-section .char-count.too-short .count-number {
   color: red;
   transition: 0.3s all ease;
 }
