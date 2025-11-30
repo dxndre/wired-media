@@ -8,8 +8,19 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-function wpqc_quickcheck_shortcode() {
+// Compiling SCSS > CSS for output
+function wpqc_enqueue_assets() {
+    wp_enqueue_style(
+        'wpqc-style',
+        plugin_dir_url( __FILE__ ) . 'assets/css/style.css',
+        [],
+        '1.0.0'
+    );
+}
+add_action( 'wp_enqueue_scripts', 'wpqc_enqueue_assets' );
 
+
+function wpqc_quickcheck_shortcode() {
     // If the form was submitted, process it securely
     $output = '';
 
@@ -32,14 +43,11 @@ function wpqc_quickcheck_shortcode() {
     ob_start();
     ?>
 
-    <form method="post" action="">
+    <form class="quickcheck-form" method="post" action="">
         <?php wp_nonce_field('wpqc_form_action', 'wpqc_nonce'); ?>
 
         <label for="wpqc_text">Enter something:</label><br>
         <input type="text" name="wpqc_text" id="wpqc_text" required />
-
-        <br><br>
-
         <button type="submit" name="wpqc_submit">Submit</button>
     </form>
 

@@ -1,0 +1,14 @@
+{
+  "name": "wp-quickcheck",
+  "version": "1.0.0",
+  "description": "Sass build/watch for WP QuickCheck plugin assets",
+  "private": true,
+  "devDependencies": {
+    "sass": "^1.87.0"
+  },
+  "scripts": {
+    "build:sass": "sass assets/scss:assets/css --no-source-map",
+    "watch:sass": "sass --watch assets/scss:assets/css --no-source-map",
+    "start": "npm run watch:sass"
+  }
+}
