@@ -118,14 +118,18 @@
   margin-top: 3em;
 }
 .quickcheck-plugin .results h3 {
+  margin-top: 0;
   font-weight: 500;
 }
 .quickcheck-plugin .results .qc-entry {
   padding: 16px;
   padding-left: 0;
   font-size: 16px;
+  transform: translateY(10px);
   border-bottom: 1px solid #dedede;
   opacity: 0;
+}
+.quickcheck-plugin .results .qc-entry.visible {
   animation: fadeIn 1s ease-in-out forwards;
 }
 .quickcheck-plugin .results .qc-entry:last-of-type {
@@ -137,12 +141,16 @@
 }
 .quickcheck-plugin .results .guest-message p a {
   text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.375);
+  transition: 0.7s all ease;
+}
+.quickcheck-plugin .results .guest-message p a:hover {
+  border-color: black;
+  transition: 0.3s all ease;
 }
 .quickcheck-plugin .qc-message {
   text-align: center;
   font-size: 16px;
-  color: black;
   background: #232323;
   color: white;
   padding: 10px;
@@ -150,6 +158,42 @@
   min-width: 300px;
   margin: 0 auto;
   margin-top: 3em;
+  opacity: 0;
+  min-height: 25px;
+  transform: translateY(-10px);
+  transition: 0.7s all ease;
+}
+.quickcheck-plugin .qc-message.has-message {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quickcheck-plugin .qc-message.success {
+  background-color: #35bcbf;
+  transition: 0.3s all ease;
+}
+.quickcheck-plugin .qc-message.warning {
+  background-color: #f9b248;
+  transition: 0.3s all ease;
+}
+.quickcheck-plugin .qc-message.error {
+  background-color: #fc3a52;
+  transition: 0.3s all ease;
+}
+.quickcheck-plugin .qc-message span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-5px);
+  animation: slideFadeIn 0.4s forwards;
+}
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes fadeIn {
   from {
