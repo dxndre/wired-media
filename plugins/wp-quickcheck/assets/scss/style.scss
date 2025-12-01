@@ -1,3 +1,11 @@
+// Colour Variables 
+
+$red : #fc3a52;
+$green : #35bcbf;
+$orange : #f9b248;
+$light-grey: #dedede;
+$dark-grey: #333333;
+
 .quickcheck-plugin {
     min-height: 90vh;
     display: flex;
@@ -42,9 +50,9 @@
                         font-size: 20px;
                         padding: 24px 32px;
                         background: transparent;
-                        color: #333333;
+                        color: $dark-grey;
                         width: 100%;
-                        border: 1px solid #dedede;
+                        border: 1px solid $light-grey;
                         border-right: none;
                         border-top-left-radius: 50px;
                         border-bottom-left-radius: 50px;
@@ -58,7 +66,7 @@
                         &:focus {
                             color: black;
                             outline: none;
-                            border-color: #333333;
+                            border-color: $dark-grey;
                             transition: 0.3s all ease;
 
                             &::placeholder {
@@ -76,7 +84,7 @@
                     font-size: 20px;
                     border: 1px solid transparent;
                     border-left: none;
-                    background: #333333;
+                    background: $dark-grey;
                     color: white;
                     transition: 0.3s all ease;
 
@@ -89,11 +97,16 @@
                     &:focus,
                     &:focus-within,
                     &:focus-visible {
-                        border-color: #333333;
+                        border-color: $dark-grey;
                         background: white;
                         outline: none;
-                        color: #333333;
+                        color: $dark-grey;
                         transition: 0.3s all ease;
+
+                        &:active {
+                            background: $green;
+                            color: white;
+                        }
                     }
 
                     &.disabled {
@@ -110,6 +123,11 @@
                             outline: none;
                             transition: 0.3s all ease;
                         }
+
+                        &:active {
+                            background: $red;
+                            color: white;
+                        }
                     }
                 }
             }
@@ -122,7 +140,7 @@
                     font-weight: 500;
                     display: block;
                     font-size: 0.85em;
-                    color: #333333;
+                    color: $dark-grey;
                     margin-top: 0.25em;
                     text-align: center;
                     transition: 0.3s all ease;
@@ -134,7 +152,7 @@
 
                     .count-number {
                         &.too-short {
-                            color: red;
+                            color: $red;
                             transition: 0.3s all ease;
                         }
                     }
@@ -156,7 +174,7 @@
             padding-left: 0;
             font-size: 16px;
             transform: translateY(10px);
-            border-bottom: 1px solid #dedede;
+            border-bottom: 1px solid $light-grey;
             opacity: 0; 
 
             &.visible {
@@ -190,7 +208,7 @@
     .qc-message {
         text-align: center;
         font-size: 16px;
-        background: #232323;
+        background: $dark-grey;
         color: white;
         padding: 10px;
         border-radius: 25px;
@@ -208,15 +226,15 @@
         }
 
         &.success { 
-            background-color: #35bcbf;
+            background-color: $green;
             transition: 0.3s all ease; 
         }
         &.warning { 
-            background-color: #f9b248;
+            background-color: $orange;
             transition: 0.3s all ease; 
         }
         &.error   { 
-            background-color: #fc3a52;
+            background-color: $red;
             transition: 0.3s all ease; 
         }
 

@@ -82,6 +82,10 @@
   color: #333333;
   transition: 0.3s all ease;
 }
+.quickcheck-plugin .quickcheck-form .form-inner .input-section button:active:active, .quickcheck-plugin .quickcheck-form .form-inner .input-section button:focus:active, .quickcheck-plugin .quickcheck-form .form-inner .input-section button:focus-within:active, .quickcheck-plugin .quickcheck-form .form-inner .input-section button:focus-visible:active {
+  background: #35bcbf;
+  color: white;
+}
 .quickcheck-plugin .quickcheck-form .form-inner .input-section button.disabled {
   background-color: #d6d6d6;
   color: #939393;
@@ -92,6 +96,10 @@
   background: rgba(214, 214, 214, 0.431372549);
   outline: none;
   transition: 0.3s all ease;
+}
+.quickcheck-plugin .quickcheck-form .form-inner .input-section button.disabled:active {
+  background: #fc3a52;
+  color: white;
 }
 .quickcheck-plugin .quickcheck-form .form-inner .character-count-section {
   font-size: 18px;
@@ -111,7 +119,7 @@
   transition: 0.3s all ease;
 }
 .quickcheck-plugin .quickcheck-form .form-inner .character-count-section .char-count .count-number.too-short {
-  color: red;
+  color: #fc3a52;
   transition: 0.3s all ease;
 }
 .quickcheck-plugin .results {
@@ -151,7 +159,7 @@
 .quickcheck-plugin .qc-message {
   text-align: center;
   font-size: 16px;
-  background: #232323;
+  background: #333333;
   color: white;
   padding: 10px;
   border-radius: 25px;
