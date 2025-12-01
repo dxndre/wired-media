@@ -2,10 +2,46 @@ jQuery(document).ready(function($) {
 
     const input = $('#wpqc_text');
     const countNumber = $('.count-number');
-    const submitBtn = $('.quickcheck-form button[type="submit"]');
+    const submitBtn = $('#qc-submit');
+    const messageBox = $('.qc-message');
+    const entriesContainer = $('#entries-container');
 
-    // Disable submit on load
     submitBtn.addClass('disabled').prop('disabled', true);
+
+    // Function to render entries
+    function renderEntries(entries) {
+        entriesContainer.empty();
+        entries.forEach(entry => {
+            const entryEl = $(`
+                <div class="qc-entry" data-id="${entry.id}">
+                    <span class="qc-content">${entry.content}</span>
+                    <span class="qc-date">(${entry.created_at})</span>
+                </div>
+            `);
+            entriesContainer.append(entryEl);
+        });
+    }
+
+    // Fetch last 5 entries
+    function fetchEntries() {
+        $.ajax({
+            url: wpqc_ajax_obj.ajax_url,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'wpqc_get_entries'
+            },
+            success: function(entries) {
+                renderEntries(entries);
+            },
+            error: function(xhr) {
+                console.log('Fetch entries AJAX error:', xhr.responseText);
+            }
+        });
+    }
+
+    // Initial fetch
+    fetchEntries();
 
     // Live character count + enable/disable + too-short class
     input.on('input', function() {
@@ -15,24 +51,19 @@ jQuery(document).ready(function($) {
         if (length < 3) {
             countNumber.addClass('too-short');
             submitBtn.addClass('disabled').prop('disabled', true);
+
+            let remaining = 3 - length;
+            messageBox.html(`<span class="qc-warning">You need to add ${remaining} more character${remaining > 1 ? 's' : ''} before you can submit.</span>`);
         } else {
             countNumber.removeClass('too-short');
             submitBtn.removeClass('disabled').prop('disabled', false);
+            messageBox.html('');
         }
     });
 
-    // Helper: keep only last 5 entries
-    function trimEntries() {
-        const entries = $('#entries-container .qc-entry');
-        if (entries.length > 5) {
-            entries.last().remove();
-        }
-    }
-
-    // AJAX form submission
+    // AJAX submit
     $('.quickcheck-form').on('submit', function(e) {
         e.preventDefault();
-
         let content = input.val();
 
         $.ajax({
@@ -40,69 +71,30 @@ jQuery(document).ready(function($) {
             type: 'POST',
             dataType: 'json',
             data: {
-                action: 'qc_submit_entry', // match PHP handler
-                nonce: wpqc_ajax_obj.nonce, // match localized nonce
+                action: 'qc_submit_entry',
+                nonce: wpqc_ajax_obj.nonce,
                 content: content
             },
             success: function(response) {
                 if (response.success) {
-                    // Prepend new entry with classes
-                    $('#entries-container').prepend(
-                        `<div class="qc-entry qc-entry-${response.data.id}">
-                            <span class="qc-entry-id">ID ${response.data.id}:</span> 
-                            <span class="qc-entry-content">${response.data.content}</span>
-                        </div>`
-                    );
-
-                    // Trim to last 5 entries
-                    trimEntries();
+                    messageBox.html(`<span class="qc-success">Successfully added entry!</span>`);
 
                     // Reset field + count
                     input.val('');
                     countNumber.text('0').addClass('too-short');
-
-                    // Disable submit
                     submitBtn.addClass('disabled').prop('disabled', true);
 
+                    // Refresh entries list
+                    fetchEntries();
                 } else {
-                    alert("Error: " + response.data.message);
+                    messageBox.html(`<span class="qc-error">Error: ${response.data.message}</span>`);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function(xhr) {
+                messageBox.html(`<span class="qc-error">AJAX error – check console</span>`);
                 console.log("AJAX ERROR:", xhr.responseText);
-                alert("AJAX error – check console");
             }
         });
     });
-
-    // Optional: load last 5 entries on page load
-    function loadEntries() {
-        $.ajax({
-            url: wpqc_ajax_obj.ajax_url,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                action: 'wpqc_get_entries'
-            },
-            success: function(entries) {
-                const container = $('#entries-container');
-                container.empty();
-                entries.forEach(function(entry) {
-                    container.append(
-                        `<div class="qc-entry qc-entry-${entry.id}">
-                            <span class="qc-entry-id">ID ${entry.id}:</span> 
-                            <span class="qc-entry-content">${entry.content}</span>
-                        </div>`
-                    );
-                });
-            },
-            error: function(xhr, status, error) {
-                console.log("AJAX ERROR:", xhr.responseText);
-                alert("Could not load entries – check console");
-            }
-        });
-    }
-
-    loadEntries(); // run on page load
 
 });

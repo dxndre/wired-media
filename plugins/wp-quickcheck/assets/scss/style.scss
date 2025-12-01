@@ -99,10 +99,8 @@
                     }
 
                     &.disabled {
-                        // pointer-events: none;
                         background-color: #d6d6d6;
                         color: #939393;
-                        // opacity: 0.5;
                         cursor: not-allowed;
 
                         &:active,
@@ -112,7 +110,6 @@
                             border-color: #d6d6d66e;
                             background: #d6d6d66e;
                             outline: none;
-                            // color: white;
                             transition: 0.3s all ease;
                         }
                     }
@@ -179,6 +176,19 @@
                 }
             }
         }
+    }
+
+    .qc-message {
+        text-align: center;
+        font-size: 16px;
+        color: black;
+        background: #232323;
+        color: white;
+        padding: 10px;
+        border-radius: 25px;
+        min-width: 300px;
+        margin: 0 auto;
+        margin-top: 3em;
     }
 
     @keyframes fadeIn {

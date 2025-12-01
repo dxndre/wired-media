@@ -72,6 +72,7 @@ function wpqc_quickcheck_shortcode() {
                     <div class="character-count-section">
                         <span class="char-count">Character Count: <span class="count-number too-short">0</span></span>
                     </div>
+                    <div class="qc-message"></div>
                 </div>
             </form>
 
@@ -101,7 +102,8 @@ function wpqc_submit_entry() {
 
     check_ajax_referer('qc_nonce', 'nonce'); // VERIFY NONCE
 
-    $content = isset($_POST['content']) ? sanitize_text_field($_POST['content']) : '';
+    $content = isset($_POST['content']) ? sanitize_text_field( wp_unslash($_POST['content']) ) : '';
+ // When apostrophes are used, it outputs '\' in the DOM.
 
     if ( empty($content) || strlen($content) < 3 ) {
         wp_send_json_error(['message' => 'Content must be at least 3 characters']);

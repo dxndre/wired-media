@@ -139,6 +139,18 @@
   text-decoration: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
+.quickcheck-plugin .qc-message {
+  text-align: center;
+  font-size: 16px;
+  color: black;
+  background: #232323;
+  color: white;
+  padding: 10px;
+  border-radius: 25px;
+  min-width: 300px;
+  margin: 0 auto;
+  margin-top: 3em;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
