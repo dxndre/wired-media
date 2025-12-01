@@ -55,31 +55,44 @@ function wpqc_create_table() {
 
 
 // SHORTCODE FUNCTION
+// SHORTCODE FUNCTION
 function wpqc_quickcheck_shortcode() {
     ob_start();
     ?>
+    <div class="quickcheck-plugin">
+        <div class="container">
+            <h1>WP Quickcheck Plugin</h1>
+            <form class="quickcheck-form">
+                <div class="form-inner">
+                    <label for="wpqc_text">Write something:</label><br>
+                    <div class="input-section">
+                        <input type="text" name="wpqc_text" id="wpqc_text" placeholder="Write Something..." required />
+                        <button type="submit" id="qc-submit" class="disabled" disabled>Submit</button>
+                    </div>
+                    <div class="character-count-section">
+                        <span class="char-count">Character Count: <span class="count-number too-short">0</span></span>
+                    </div>
+                </div>
+            </form>
 
-    <form class="quickcheck-form">
-        <div class="form-inner">
-            <label for="wpqc_text">Write something:</label><br>
-            <div class="input-section">
-                <input type="text" name="wpqc_text" id="wpqc_text" placeholder="Write Something..." required />
-                <button type="submit" id="qc-submit" class="disabled" disabled>Submit</button>
-            </div>
-            <div class="character-count-section">
-                <span class="char-count">Character Count: <span class="count-number too-short">0</span></span>
+            <div class="results">
+                
+                <?php if ( is_user_logged_in() ) : ?>
+                    <h3>Your last 5 entries</h3>
+                    <div id="entries-container"></div>
+                <?php else : ?>
+                    <div class="guest-message">
+                        <p>Want to see entries? Please <a href="<?php echo wp_login_url( get_permalink() ); ?>">Sign In</a> to view them.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-    </form>
-
-    <div class="results">
-        <h3>Your last 5 entries</h3>
-        <div id="entries-container"></div>
     </div>
     <?php
     return ob_get_clean();
 }
 add_shortcode('qc_form', 'wpqc_quickcheck_shortcode');
+
 
 
 // AJAX HANDLER: INSERT ENTRY
